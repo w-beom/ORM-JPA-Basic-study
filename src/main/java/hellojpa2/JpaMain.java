@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -25,10 +26,16 @@ public class JpaMain {
 
             entityManager.persist(member);
 
+            entityManager.flush();
+            entityManager.clear();
+
             // 조회
             Member findMember = entityManager.find(Member.class, member.getId());
-            Team findTeam = findMember.getTeam();
-            System.out.println("findTeam = " + findTeam.getName());
+            List<Member> findMembers = findMember.getTeam().getMembers();
+
+            for (Member m : findMembers) {
+                System.out.println("m.getUserName() = " + m.getUserName());
+            }
 
             transaction.commit();
         } catch (Exception e) {
